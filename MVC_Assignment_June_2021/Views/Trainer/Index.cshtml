@@ -1,0 +1,183 @@
+﻿@model PagedList.IPagedList<MVC_Assignment_June_2021.Models.Trainer>
+@using PagedList;
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Theatre Trainers</h2>
+
+@{
+    bool condition = false;
+    if (TempData.ContainsKey("ShowDeleteAlert"))
+    {
+        condition = (bool)TempData["ShowDeleteAlert"];
+    }
+
+}
+@if (condition)
+{
+    <div class="alert alert-success alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>Success!</strong> @TempData["DeleteStatus"]
+    </div>
+}
+
+
+@{
+    bool condition2 = false;
+    if (TempData.ContainsKey("ShowCreateAlert"))
+    {
+        condition2 = (bool)TempData["ShowCreateAlert"];
+    }
+
+}
+@if (condition2)
+{
+    <div class="alert alert-success alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>Success!</strong> @TempData["CreateStatus"]
+    </div>
+}
+
+@{
+    bool condition3 = false;
+    if (TempData.ContainsKey("ShowEditAlert"))
+    {
+        condition3 = (bool)TempData["ShowEditAlert"];
+    }
+
+}
+@if (condition3)
+{
+    <div class="alert alert-success alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>Success!</strong> @TempData["EditStatus"]
+    </div>
+}
+
+
+
+@if (!(Model.PageCount < Model.PageNumber))
+{
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    using (Html.BeginForm("index", "Trainer", FormMethod.Get, new { @class = "form-group" }))
+    {
+        @Html.TextBox("searchFirstName", null, new { @class = "form-control", placeholder = "Search First Name", type = "search" });
+        @Html.TextBox("searchLastName", null, new { @class = "form-control", placeholder = "Search Last Name", type = "search" });
+        @Html.TextBox("searchMinSalary", null, new { @class = "form-control", placeholder = "Search Minimum Salary", type = "number" });
+        @Html.TextBox("searchMaxSalary", null, new { @class = "form-control", placeholder = "Search Μaximum Salary", type = "number" });
+        @Html.TextBox("searchHireDate", null, new { @class = "form-control", placeholder = "Search Hire Date", type = "date" });
+        @Html.TextBox("searchIsAvailable", null, new { @class = "form-control", placeholder = "Search Is Trainer Available", type = "bool" });
+        @Html.TextBox("searchCategory", null, new { @class = "form-control", placeholder = "Search Category", type = "search" });
+
+        <input type="hidden" name="sortOrder" value="CurrentSortOrder" />
+
+        <input type="submit" value="Search Trainer" class="btn btn-primary" />
+        <input id="resetButton" type="button" value="Clear Form" class="btn btn-success" />
+    }
+
+    <table class="table">
+        <tr>
+            <th>
+                @Html.ActionLink("First Name", "Index", new { sortOrder = ViewBag.FNSP, searchFirstName = ViewBag.CurrentFirstName, searchLastName = ViewBag.CurrentLastName, searchMinSalary = ViewBag.CurrentMinSalary, searchMaxSalary = ViewBag.CurrentMaxSalary, searchHireDate = ViewBag.CurrentHireDate, searchIsAvailable = ViewBag.CurrentIsAvailable, searchCategory = ViewBag.CurrentCategory }, null)
+            </th>
+            <th>
+                @Html.ActionLink("Last Name", "Index", new { sortOrder = ViewBag.LNSP, searchFirstName = ViewBag.CurrentFirstName, searchLastName = ViewBag.CurrentLastName, searchMinSalary = ViewBag.CurrentMinSalary, searchMaxSalary = ViewBag.CurrentMaxSalary, searchHireDate = ViewBag.CurrentHireDate, searchIsAvailable = ViewBag.CurrentIsAvailable, searchCategory = ViewBag.CurrentCategory }, null)
+            </th>
+            <th>
+                @Html.ActionLink("Salary", "Index", new { sortOrder = ViewBag.SSP, searchFirstName = ViewBag.CurrentFirstName, searchLastName = ViewBag.CurrentLastName, searchMinSalary = ViewBag.CurrentMinSalary, searchMaxSalary = ViewBag.CurrentMaxSalary, searchHireDate = ViewBag.CurrentHireDate, searchIsAvailable = ViewBag.CurrentIsAvailable, searchCategory = ViewBag.CurrentCategory }, null)
+            </th>
+            <th>
+                @Html.ActionLink("Hire Date", "Index", new { sortOrder = ViewBag.HDSP, searchFirstName = ViewBag.CurrentFirstName, searchLastName = ViewBag.CurrentLastName, searchMinSalary = ViewBag.CurrentMinSalary, searchMaxSalary = ViewBag.CurrentMaxSalary, searchHireDate = ViewBag.CurrentHireDate, searchIsAvailable = ViewBag.CurrentIsAvailable, searchCategory = ViewBag.CurrentCategory }, null)
+            </th>
+            <th>
+                @Html.ActionLink("Is Trainer Available", "Index", new { sortOrder = ViewBag.IASP, searchFirstName = ViewBag.CurrentFirstName, searchLastName = ViewBag.CurrentLastName, searchMinSalary = ViewBag.CurrentMinSalary, searchMaxSalary = ViewBag.CurrentMaxSalary, searchHireDate = ViewBag.CurrentHireDate, searchIsAvailable = ViewBag.CurrentIsAvailable, searchCategory = ViewBag.CurrentCategory }, null)
+            </th>
+            <th>
+                @Html.ActionLink("Categories", "Index", new { sortOrder = ViewBag.CSP, searchFirstName = ViewBag.CurrentFirstName, searchLastName = ViewBag.CurrentLastName, searchMinSalary = ViewBag.CurrentMinSalary, searchMaxSalary = ViewBag.CurrentMaxSalary, searchHireDate = ViewBag.CurrentHireDate, searchIsAvailable = ViewBag.CurrentIsAvailable, searchCategory = ViewBag.CurrentCategory }, null)
+            </th>
+            <th>Actions</th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Salary)
+                </td>
+                <td>
+                    @String.Format($"{@item.HireDate:d}")
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ΙsAvailable)
+                </td>
+                <td>
+                    @if (!(item.Categories is null))
+                    {
+                        <ul>
+                            @foreach (var category in item.Categories)
+                            {
+                                <li>@category.Subject</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <text>No Categories</text>
+                    }
+
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.TrainerId }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.TrainerId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.TrainerId })
+                </td>
+            </tr>
+        }
+    </table>
+    <i>Page</i> @Model.PageNumber <i>of</i> @Model.PageCount
+
+    @Html.PagedListPager(Model, x => Url.Action("Index", "Trainer", new { page = x }))
+
+}
+else
+{
+    <div>
+        <h3><i>No Data in Database</i></h3>
+        <br />
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+
+}
+
+@section MyCustomCss{
+    <style>
+        body {
+            background-color: darkgrey;
+        }
+    </style>
+}
+
+@section MyCustomJavascript{
+    <script>
+        $('#resetButton').click(function (e) {
+            $("#searchFirstName").val("");
+            $("#searchLastName").val("");
+            $("#searchMinSalary").val("");
+            $("#searchMaxSalary").val("");
+            $("#searchHireDate").val("");
+            $("#searchIsAvailable").val("");
+            window.location.href='@Url.Action("Index", "Trainer")';
+        });
+    </script>
+}
